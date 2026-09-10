@@ -3,7 +3,7 @@ from pydantic import BaseModel, ConfigDict
 from schemas.enums import Family, Tier
 
 
-class Component(BaseModel):
+class Implant(BaseModel):
     reference: str
     name: str
     family: Family

@@ -6,6 +6,6 @@ router = APIRouter(prefix="/hello")
 async def root():
     return {"message": "Welcome to NeuroLink Corp Components API!"}
 
-@router.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+@router.get("/health")
+async def health():
+    return {"message": "API is running smoothly!"}
