@@ -1,0 +1,10 @@
+from fastapi import APIRouter
+
+from schemas.enums import Category
+
+router = APIRouter(prefix="/categories", tags=["categories"])
+
+@router.get("/", response_model=dict[str, list[str]])
+async def list_families():
+    categories = [item.value for item in Category]
+    return {"data": categories}

@@ -9,7 +9,7 @@ class Tier(str, Enum):
     MILSPEC = "MilSpec"
     PROTOTYPE = "Prototype"
 
-class Family(str,Enum):
+class Category(str,Enum):
     NEURAL = "Neural"
     SENSORY = "Sensory"
     MOTOR = "Motor"
