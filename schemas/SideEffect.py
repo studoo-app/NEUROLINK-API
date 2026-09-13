@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 
+
 class SideEffect(BaseModel):
     reference: str
     name: str

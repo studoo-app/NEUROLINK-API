@@ -11,7 +11,6 @@ from models import ApiKeyModel
 from schemas.enums import ApiKeyRole
 from security.hashing import extract_key_id, hash_api_key
 
-
 api_key_header = APIKeyHeader(
     name="X-API-Key",
     auto_error=False,
@@ -43,9 +42,7 @@ def get_current_api_key(
             detail="Invalid API key",
         )
 
-    statement = select(ApiKeyModel).where(
-        ApiKeyModel.key_id == key_id
-    )
+    statement = select(ApiKeyModel).where(ApiKeyModel.key_id == key_id)
 
     db_api_key = db.scalar(statement)
 
@@ -73,6 +70,7 @@ def get_current_api_key(
         )
 
     return db_api_key
+
 
 def require_admin(
     api_key: Annotated[

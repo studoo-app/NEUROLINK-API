@@ -1,14 +1,21 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+
 from database import get_db
-from typing import Annotated
 from models import ApiKeyModel
-from schemas.ApiKey import (ApiKeyResponse, ApiKeyCreate, ApiKeyCreatedResponse)
+from schemas.ApiKey import ApiKeyCreate, ApiKeyCreatedResponse, ApiKeyResponse
 from security.api_key import require_admin
 from services.api_key import create_api_key
 
-router = APIRouter(prefix="/authentification", tags=["Authentification"],dependencies=[Depends(require_admin)])
+router = APIRouter(
+    prefix="/authentification",
+    tags=["Authentification"],
+    dependencies=[Depends(require_admin)],
+)
+
 
 @router.post(
     "/generate-key",
@@ -37,7 +44,8 @@ def create_key(
         api_key=api_key,
     )
 
-@router.get("/list-keys",response_model=list[ApiKeyResponse])
+
+@router.get("/list-keys", response_model=list[ApiKeyResponse])
 def list_api_keys(
     db: Annotated[
         Session,
@@ -48,7 +56,11 @@ def list_api_keys(
 
     return db.scalars(statement).all()
 
-@router.delete("/revoke/{key_id}",status_code=status.HTTP_204_NO_CONTENT,)
+
+@router.delete(
+    "/revoke/{key_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
 def revoke_api_key(
     key_id: str,
     db: Annotated[
@@ -56,9 +68,7 @@ def revoke_api_key(
         Depends(get_db),
     ],
 ):
-    statement = select(ApiKeyModel).where(
-        ApiKeyModel.key_id == key_id
-    )
+    statement = select(ApiKeyModel).where(ApiKeyModel.key_id == key_id)
 
     api_key = db.scalar(statement)
 
@@ -71,4 +81,3 @@ def revoke_api_key(
     api_key.is_active = False
 
     db.commit()
-

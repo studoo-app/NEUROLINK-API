@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 
 from database import get_db
 from models import ImplantModel
@@ -7,11 +6,16 @@ from schemas.Implant import Implant
 from schemas.Prerequisites import Prerequisites
 from security.api_key import get_current_api_key
 
-router = APIRouter(prefix="/implants", tags=["Implant"],dependencies=[Depends(get_current_api_key)])
+router = APIRouter(
+    prefix="/implants", tags=["Implant"], dependencies=[Depends(get_current_api_key)]
+)
 
 
-@router.get("/" , response_model=list[Implant])
-async def list_implants(db: Session = Depends(get_db)):
+@router.get("/", response_model=list[Implant])
+async def list_implants():
+
+    db = next(get_db())
+
     implants = db.query(ImplantModel).all()
 
     return [
@@ -32,4 +36,3 @@ async def list_implants(db: Session = Depends(get_db)):
         )
         for implant in implants
     ]
-

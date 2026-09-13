@@ -1,8 +1,8 @@
 from pydantic import BaseModel, ConfigDict, Field
 
+from schemas.enums import Category, Tier
 from schemas.Prerequisites import Prerequisites
 from schemas.SideEffect import SideEffect
-from schemas.enums import Tier, Category
 
 
 class Implant(BaseModel):
@@ -15,4 +15,3 @@ class Implant(BaseModel):
     sideseffects: list[SideEffect] = Field(default_factory=list)
 
     model_config = ConfigDict(from_attributes=True)
-

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from sqlalchemy.orm import Session
-
 from database import SessionLocal
 from models import ImplantModel, SideEffectModel
 from schemas.enums import Category, Severity, Tier
@@ -43,28 +41,76 @@ def _build_prerequisites(index: int) -> dict[str, int | None]:
 
 IMPLANT_NAMES = {
     Category.NEURAL: [
-        "CortexLink", "Synapse Relay", "Myelin Mesh", "NeuroFuse", "Cranial Array",
-        "Signal Lattice", "Axon Gate", "Cerebral Node", "Pulse Thread", "Thought Bridge"
+        "CortexLink",
+        "Synapse Relay",
+        "Myelin Mesh",
+        "NeuroFuse",
+        "Cranial Array",
+        "Signal Lattice",
+        "Axon Gate",
+        "Cerebral Node",
+        "Pulse Thread",
+        "Thought Bridge",
     ],
     Category.SENSORY: [
-        "Optic Bloom", "Auditory Lattice", "Tactile Veil", "Spectral Lens", "Sensory Mesh",
-        "Retina Thread", "Vibrance Array", "Echo Crown", "Signal Bloom", "Perception Grid"
+        "Optic Bloom",
+        "Auditory Lattice",
+        "Tactile Veil",
+        "Spectral Lens",
+        "Sensory Mesh",
+        "Retina Thread",
+        "Vibrance Array",
+        "Echo Crown",
+        "Signal Bloom",
+        "Perception Grid",
     ],
     Category.MOTOR: [
-        "Torque Anchor", "Kinetic Spine", "Flexion Core", "Motion Tether", "Stride Relay",
-        "Servo Thread", "Joint Matrix", "Power Lattice", "Muscle Sync", "Limb Mesh"
+        "Torque Anchor",
+        "Kinetic Spine",
+        "Flexion Core",
+        "Motion Tether",
+        "Stride Relay",
+        "Servo Thread",
+        "Joint Matrix",
+        "Power Lattice",
+        "Muscle Sync",
+        "Limb Mesh",
     ],
     Category.METABOLIC: [
-        "Nutrient Gate", "Cellular Regulator", "Flux Array", "Metabolic Core", "Balance Mesh",
-        "Biofilter Node", "Vital Lattice", "Assimilation Drive", "Homeostasis Thread", "Metabolic Crown"
+        "Nutrient Gate",
+        "Cellular Regulator",
+        "Flux Array",
+        "Metabolic Core",
+        "Balance Mesh",
+        "Biofilter Node",
+        "Vital Lattice",
+        "Assimilation Drive",
+        "Homeostasis Thread",
+        "Metabolic Crown",
     ],
     Category.CARDIOVASCULAR: [
-        "Heartline Coil", "Pulse Beacon", "Vascular Mesh", "Flow Anchor", "Circulation Core",
-        "Hemodynamic Thread", "Aortic Relay", "Cardio Lattice", "Pulse Matrix", "Valve Sync"
+        "Heartline Coil",
+        "Pulse Beacon",
+        "Vascular Mesh",
+        "Flow Anchor",
+        "Circulation Core",
+        "Hemodynamic Thread",
+        "Aortic Relay",
+        "Cardio Lattice",
+        "Pulse Matrix",
+        "Valve Sync",
     ],
     Category.DERMAL: [
-        "Skin Shield", "Thermal Veil", "Barrier Mesh", "Dermal Weave", "Shield Lattice",
-        "Protective Thread", "Cell Guard", "Barrier Core", "Skin Relay", "Thermal Anchor"
+        "Skin Shield",
+        "Thermal Veil",
+        "Barrier Mesh",
+        "Dermal Weave",
+        "Shield Lattice",
+        "Protective Thread",
+        "Cell Guard",
+        "Barrier Core",
+        "Skin Relay",
+        "Thermal Anchor",
     ],
 }
 

@@ -15,9 +15,7 @@ class ApiKeyResponse(BaseModel):
     role: ApiKeyRole
     is_active: bool
 
-    model_config = ConfigDict(
-        from_attributes=True
-    )
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ApiKeyCreatedResponse(ApiKeyResponse):

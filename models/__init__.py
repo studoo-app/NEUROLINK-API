@@ -1,3 +1,13 @@
-from models.models import ImplantModel, SideEffectModel, implant_incompatibilities, ApiKeyModel
+from models.models import (
+    ApiKeyModel,
+    ImplantModel,
+    SideEffectModel,
+    implant_incompatibilities,
+)
 
-__all__ = ["ImplantModel", "SideEffectModel", "implant_incompatibilities","ApiKeyModel"]
+__all__ = [
+    "ApiKeyModel",
+    "ImplantModel",
+    "SideEffectModel",
+    "implant_incompatibilities",
+]

@@ -1,4 +1,4 @@
-from database import SessionLocal, get_db, get_session
+from database import get_session
 from schemas.enums import ApiKeyRole
 from services.api_key import create_api_key
 
@@ -20,10 +20,7 @@ def main() -> None:
         print(f"API Key: {api_key}")
         print()
 
-        print(
-            "Save this key now. "
-            "It will not be displayed again."
-        )
+        print("Save this key now. It will not be displayed again.")
 
     finally:
         db.close()

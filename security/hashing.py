@@ -1,7 +1,6 @@
 import hashlib
 import secrets
 
-
 API_KEY_PREFIX = "sk"
 
 
@@ -19,9 +18,7 @@ def generate_api_key() -> tuple[str, str]:
 def hash_api_key(api_key: str) -> str:
     """Retourne le hash SHA-256 d'une clé API."""
 
-    return hashlib.sha256(
-        api_key.encode("utf-8")
-    ).hexdigest()
+    return hashlib.sha256(api_key.encode("utf-8")).hexdigest()
 
 
 def extract_key_id(api_key: str) -> str | None:

@@ -9,7 +9,8 @@ class Tier(str, Enum):
     MILSPEC = "MilSpec"
     PROTOTYPE = "Prototype"
 
-class Category(str,Enum):
+
+class Category(str, Enum):
     NEURAL = "Neural"
     SENSORY = "Sensory"
     MOTOR = "Motor"
@@ -17,12 +18,14 @@ class Category(str,Enum):
     CARDIOVASCULAR = "Cardiovascular"
     DERMAL = "Dermal"
 
-class Severity(str,Enum):
+
+class Severity(str, Enum):
     MILD = "Mild"
     MODERATE = "Moderate"
     SEVERE = "Severe"
 
-class ApiKeyRole(str,Enum):
+
+class ApiKeyRole(str, Enum):
     USER = "User"
     ADMIN = "Admin"
     SUPERADMIN = "SuperAdmin"
