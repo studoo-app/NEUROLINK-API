@@ -16,3 +16,8 @@ class Category(str,Enum):
     METABOLIC = "Metabolic"
     CARDIOVASCULAR = "Cardiovascular"
     DERMAL = "Dermal"
+
+class Severity(str,Enum):
+    MILD = "Mild"
+    MODERATE = "Moderate"
+    SEVERE = "Severe"

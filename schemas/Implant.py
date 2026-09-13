@@ -10,7 +10,7 @@ class Implant(BaseModel):
     name: str
     category: Category
     tier: Tier
-    prerequisites: Prerequisites | None = None
+    prerequisites: Prerequisites | None = Prerequisites()
     sideseffects: list[SideEffect] = Field(default_factory=list)
 
     model_config = ConfigDict(from_attributes=True)
