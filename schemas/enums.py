@@ -21,3 +21,8 @@ class Severity(str,Enum):
     MILD = "Mild"
     MODERATE = "Moderate"
     SEVERE = "Severe"
+
+class ApiKeyRole(str,Enum):
+    USER = "User"
+    ADMIN = "Admin"
+    SUPERADMIN = "SuperAdmin"

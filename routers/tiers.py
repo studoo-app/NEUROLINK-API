@@ -1,10 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from schemas.enums import Tier
+from security.api_key import get_current_api_key
 
 router = APIRouter(prefix="/tiers", tags=["Tier"])
 
-@router.get("/", response_model=list[str])
+@router.get("/", response_model=list[str],dependencies=[Depends(get_current_api_key)])
 async def list_tiers():
     tiers = [item.value for item in Tier]
     return {"data": tiers}

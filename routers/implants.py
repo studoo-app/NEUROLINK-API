@@ -4,9 +4,10 @@ from sqlalchemy.orm import Session
 from database import get_db
 from models import ImplantModel
 from schemas.Implant import Implant
-from schemas.prerequisites import Prerequisites
+from schemas.Prerequisites import Prerequisites
+from security.api_key import get_current_api_key
 
-router = APIRouter(prefix="/implants", tags=["Implant"])
+router = APIRouter(prefix="/implants", tags=["Implant"],dependencies=[Depends(get_current_api_key)])
 
 
 @router.get("/" , response_model=list[Implant])

@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field
 
-from schemas.prerequisites import Prerequisites
+from schemas.Prerequisites import Prerequisites
 from schemas.SideEffect import SideEffect
 from schemas.enums import Tier, Category
 
