@@ -169,9 +169,8 @@ def _build_implant(index: int) -> ImplantModel:
 
 def seed_database() -> None:
     with SessionLocal() as db:
-        db.query(SideEffectModel).delete()
-        db.query(ImplantModel).delete()
-        db.commit()
+        if db.query(ImplantModel).count() >= IMPLANT_COUNT:
+            return
 
         implants = [_build_implant(index) for index in range(IMPLANT_COUNT)]
         implants_by_reference = {implant.reference: implant for implant in implants}
