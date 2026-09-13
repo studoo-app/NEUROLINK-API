@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    container_name: neurolink-api
+    ports:
+      - "8000:8000"
+    environment:
+      NEUROLINK_API_KEY: neurolink-dev-key
+    volumes:
+      - ./:/app
+    command: uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload
