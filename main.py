@@ -10,7 +10,7 @@ app = FastAPI()
 api_route_prefix = "/api/v1"
 
 Base.metadata.create_all(bind=engine)
-seed_database()
+#seed_database()
 
 app.include_router(hello.router,prefix=api_route_prefix)
 app.include_router(implants.router, prefix=api_route_prefix)
