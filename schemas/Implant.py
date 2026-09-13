@@ -8,6 +8,7 @@ from schemas.enums import Tier, Category
 class Implant(BaseModel):
     reference: str
     name: str
+    description: str
     category: Category
     tier: Tier
     prerequisites: Prerequisites | None = Prerequisites()
