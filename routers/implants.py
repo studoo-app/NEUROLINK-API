@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from schemas.Implant import Implant
 from schemas.enums import Tier, Category
 
-router = APIRouter(prefix="/implants", tags=["Implants"])
+router = APIRouter(prefix="/implants", tags=["Implant"])
 
 
 @router.get("/" , response_model=dict[str, list[Implant]])

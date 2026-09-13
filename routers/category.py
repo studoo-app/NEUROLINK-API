@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from schemas.enums import Category
 
-router = APIRouter(prefix="/categories", tags=["categories"])
+router = APIRouter(prefix="/categories", tags=["Category"])
 
 @router.get("/", response_model=dict[str, list[str]])
 async def list_families():

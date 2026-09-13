@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from schemas.enums import Tier
 
-router = APIRouter(prefix="/tiers", tags=["tiers"])
+router = APIRouter(prefix="/tiers", tags=["Tier"])
 
 @router.get("/", response_model=dict[str, list[str]])
 async def list_tiers():
