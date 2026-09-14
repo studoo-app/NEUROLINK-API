@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from database import SessionLocal
-from models import ImplantModel, SideEffectModel
-from schemas.enums import Category, Severity, Tier
+from core.database import SessionLocal
+from core.enums import Category, Severity, Tier
+from features.implants.models import ImplantModel, SideEffectModel
+from features.implants.schemas import Implant, Prerequisites
 
 IMPLANT_COUNT = 50
 
@@ -26,18 +27,6 @@ SIDE_EFFECT_TEMPLATES = (
         "description": "Localized tissue reaction requiring follow-up.",
     },
 )
-
-
-def _build_prerequisites(index: int) -> dict[str, int | None]:
-    return {
-        "minAge": 18 + (index % 5),
-        "maxAge": 55 + (index % 15),
-        "minSize": 145 + (index % 10),
-        "maxSize": 190 + (index % 12),
-        "minWeight": 45 + (index % 8),
-        "maxWeight": 95 + (index % 10),
-    }
-
 
 IMPLANT_NAMES = {
     Category.NEURAL: [
@@ -115,7 +104,18 @@ IMPLANT_NAMES = {
 }
 
 
-def _implant_description(index: int, category: Category, tier: Tier, name: str) -> str:
+def build_prerequisites(index: int) -> dict[str, int | None]:
+    return {
+        "minAge": 18 + (index % 5),
+        "maxAge": 55 + (index % 15),
+        "minSize": 145 + (index % 10),
+        "maxSize": 190 + (index % 12),
+        "minWeight": 45 + (index % 8),
+        "maxWeight": 95 + (index % 10),
+    }
+
+
+def build_description(category: Category, tier: Tier, name: str) -> str:
     benefit_map = {
         Category.NEURAL: "restores cortical signal fidelity and cuts synaptic delay during high-load neural tasks.",
         Category.SENSORY: "sharpens sensory input, stabilizes perception, and improves contextual awareness in noisy environments.",
@@ -138,7 +138,7 @@ def _implant_description(index: int, category: Category, tier: Tier, name: str) 
     )
 
 
-def _build_implant(index: int) -> ImplantModel:
+def build_implant(index: int) -> ImplantModel:
     categories = list(Category)
     tiers = list(Tier)
     category = categories[index % len(categories)]
@@ -148,10 +148,10 @@ def _build_implant(index: int) -> ImplantModel:
     implant = ImplantModel(
         reference=f"REF{index + 1:03d}",
         name=name,
-        description=_implant_description(index, category, tier, name),
+        description=build_description(category, tier, name),
         category=category,
         tier=tier,
-        prerequisites=_build_prerequisites(index),
+        prerequisites=build_prerequisites(index),
     )
 
     implant.side_effects = [
@@ -167,24 +167,56 @@ def _build_implant(index: int) -> ImplantModel:
     return implant
 
 
-def seed_database() -> None:
+def serialize_implant(implant: ImplantModel) -> Implant:
+    prerequisites_data = dict(implant.prerequisites or {})
+    prerequisites_data["incompatibleImplants"] = [
+        incompatible.reference for incompatible in implant.incompatible_implants
+    ]
+
+    return Implant(
+        reference=implant.reference,
+        name=implant.name,
+        description=implant.description,
+        category=implant.category,
+        tier=implant.tier,
+        prerequisites=Prerequisites(**prerequisites_data),
+        sideseffects=[
+            {
+                "reference": side_effect.reference,
+                "name": side_effect.name,
+                "severity": side_effect.severity.value,
+                "description": side_effect.description,
+            }
+            for side_effect in implant.side_effects
+        ],
+    )
+
+
+def seed_implants() -> None:
     with SessionLocal() as db:
         if db.query(ImplantModel).count() >= IMPLANT_COUNT:
             return
 
-        implants = [_build_implant(index) for index in range(IMPLANT_COUNT)]
+        implants = [build_implant(index) for index in range(IMPLANT_COUNT)]
         implants_by_reference = {implant.reference: implant for implant in implants}
+        seen_pairs: set[tuple[str, str]] = set()
 
         for index, implant in enumerate(implants):
-            incompatible_refs = {
-                f"REF{((index + 1) % IMPLANT_COUNT) + 1:03d}",
-                f"REF{((index + 7) % IMPLANT_COUNT) + 1:03d}",
-            }
-            implant.incompatible_implants = [
-                implants_by_reference[reference]
-                for reference in sorted(incompatible_refs)
-                if reference != implant.reference
-            ]
+            candidates: list[ImplantModel] = []
+            for offset in (1, 7, 13, 19, 25):
+                candidate_index = (index + offset) % IMPLANT_COUNT
+                candidate_ref = f"REF{candidate_index + 1:03d}"
+                if candidate_ref == implant.reference:
+                    continue
+                pair = (implant.reference, candidate_ref)
+                reverse = (candidate_ref, implant.reference)
+                if pair in seen_pairs or reverse in seen_pairs:
+                    continue
+                seen_pairs.add(pair)
+                candidates.append(implants_by_reference[candidate_ref])
+                if len(candidates) >= 2:
+                    break
+            implant.incompatible_implants = candidates
 
         db.add_all(implants)
         db.commit()

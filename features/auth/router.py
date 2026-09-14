@@ -4,11 +4,11 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from database import get_db
-from models import ApiKeyModel
-from schemas.ApiKey import ApiKeyCreate, ApiKeyCreatedResponse, ApiKeyResponse
-from security.api_key import require_admin
-from services.api_key import create_api_key
+from core.database import get_db
+from features.auth.models import ApiKeyModel
+from features.auth.schemas import ApiKeyCreate, ApiKeyCreatedResponse, ApiKeyResponse
+from features.auth.dependencies import require_admin
+from features.auth.service import create_api_key
 
 router = APIRouter(
     prefix="/authentification",

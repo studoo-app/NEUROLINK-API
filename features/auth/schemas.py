@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 
-from schemas.enums import ApiKeyRole
+from core.enums import ApiKeyRole
 
 
 class ApiKeyCreate(BaseModel):

@@ -5,17 +5,13 @@ from typing import Any
 from sqlalchemy import JSON, Column, Enum, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database import Base
-from schemas.enums import ApiKeyRole, Category, Severity, Tier
+from core.database import Base
+from core.enums import Category, Severity, Tier
 
 implant_incompatibilities = Table(
     "implant_incompatibilities",
     Base.metadata,
-    Column(
-        "implant_reference",
-        ForeignKey("implants.reference"),
-        primary_key=True,
-    ),
+    Column("implant_reference", ForeignKey("implants.reference"), primary_key=True),
     Column(
         "incompatible_implant_reference",
         ForeignKey("implants.reference"),
@@ -42,8 +38,7 @@ class ImplantModel(Base):
         "ImplantModel",
         secondary=implant_incompatibilities,
         primaryjoin=reference == implant_incompatibilities.c.implant_reference,
-        secondaryjoin=reference
-        == implant_incompatibilities.c.incompatible_implant_reference,
+        secondaryjoin=reference == implant_incompatibilities.c.incompatible_implant_reference,
     )
 
 
@@ -62,18 +57,3 @@ class SideEffectModel(Base):
     description: Mapped[str] = mapped_column(String, nullable=False)
 
     implant: Mapped[ImplantModel] = relationship(back_populates="side_effects")
-
-
-class ApiKeyModel(Base):
-    __tablename__ = "api_keys"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String(255), nullable=False)
-    key_id: Mapped[str] = mapped_column(
-        String(20),
-        unique=True,
-        index=True,
-    )
-    key_hash: Mapped[str] = mapped_column(String(64))
-    role: Mapped[ApiKeyRole] = mapped_column(Enum(ApiKeyRole), nullable=False)
-    is_active: Mapped[bool] = mapped_column(nullable=False, default=True)

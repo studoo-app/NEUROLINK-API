@@ -1,5 +1,100 @@
 # NeuroLink API
 
+API FastAPI pour la gestion d'implants NeuroLink et des clés d'authentification associées.
+
+## Fonctionnalités
+
+- Point d'entrée HTTP avec versionnement `/api/v1`
+- Route de santé et d'accueil
+- Consultation des implants
+- Génération, listing et révocation de clés API
+- Persistance locale via SQLite
+
+## Stack technique
+
+- Python 3.13+
+- FastAPI
+- SQLAlchemy
+- Uvicorn
+- SQLite
+
+## Structure du projet
+
+- `app/` : bootstrap de l'application et configuration
+- `core/` : base de données et utilitaires partagés
+- `features/auth/` : authentification et gestion des clés API
+- `features/hello/` : routes de test et de santé
+- `features/implants/` : lecture des implants
+- `scripts/` : scripts utilitaires
+
+## Démarrage local
+
+### Avec Docker
+
+```bash
+docker compose up --build
 ```
-COMING SOON
+
+L'API est exposée sur `http://localhost:8010`.
+
+### Sans Docker
+
+```bash
+uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
+
+## Configuration
+
+- `DATABASE_URL` : URL de la base SQLite ou autre moteur SQLAlchemy
+
+Par défaut, l'application utilise `sqlite:///./database.db`.
+
+## Endpoints principaux
+
+### Santé
+
+- `GET /api/v1/hello/`
+- `GET /api/v1/hello/health`
+
+### Authentification
+
+Ces routes sont protégées par une dépendance d'administration.
+
+- `POST /api/v1/authentification/generate-key`
+- `GET /api/v1/authentification/list-keys`
+- `DELETE /api/v1/authentification/revoke/{key_id}`
+
+### Implants
+
+Ces routes nécessitent une clé API valide.
+
+- `GET /api/v1/implants/`
+- `GET /api/v1/implants/{reference}`
+
+## Génération de la clé admin
+
+Une clé administrateur peut être générée automatiquement via le script suivant :
+
+```bash
+uv run python scripts/create_admin_keys.py
+```
+
+Le script crée une clé API avec le rôle `ADMIN`, affiche son `Key ID` et la valeur complète de la clé, puis recommande de la sauvegarder immédiatement.
+
+Exemple de sortie :
+
+```bash
+Admin API key created
+
+Key ID : <key_id>
+API Key: <api_key>
+
+Save this key now. It will not be displayed again.
+```
+
+Cette clé est ensuite utilisée pour accéder aux routes protégées de gestion des clés et de l'administration.
+
+## Notes
+
+- La base est créée au démarrage via SQLAlchemy.
+- Le démarrage lance aussi la logique de startup définie dans `app/startup.py`.
