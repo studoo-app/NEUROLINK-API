@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 
-from models import ApiKeyModel
-from schemas.enums import ApiKeyRole
-from security.hashing import generate_api_key, hash_api_key
+from core.enums import ApiKeyRole
+from core.security import generate_api_key, hash_api_key
+from features.auth.models import ApiKeyModel
 
 
 def create_api_key(
@@ -10,7 +10,6 @@ def create_api_key(
     name: str,
     role: ApiKeyRole,
 ) -> tuple[ApiKeyModel, str]:
-
     api_key, key_id = generate_api_key()
 
     db_api_key = ApiKeyModel(
@@ -22,9 +21,7 @@ def create_api_key(
     )
 
     db.add(db_api_key)
-
     db.commit()
-
     db.refresh(db_api_key)
 
     return db_api_key, api_key
