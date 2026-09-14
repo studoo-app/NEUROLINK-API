@@ -5,9 +5,9 @@ services:
     build: .
     container_name: neurolink-api
     ports:
-      - "8000:8000"
-    environment:
-      NEUROLINK_API_KEY: neurolink-dev-key
+      - "8010:8000"
+#    environment:
+#      NEUROLINK_API_KEY: neurolink-dev-key
     volumes:
       - ./:/app
-    command: uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
