@@ -37,6 +37,8 @@ docker compose up --build
 
 L'API est exposée sur `http://localhost:8010`.
 
+La documentation Swagger est disponible sur `http://localhost:8010/docs`.
+
 ### Sans Docker
 
 ```bash
