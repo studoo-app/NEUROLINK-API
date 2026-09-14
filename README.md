@@ -37,6 +37,8 @@ docker compose up --build
 
 L'API est exposée sur `http://localhost:8010`.
 
+La documentation Swagger est disponible sur `http://localhost:8010/docs`.
+
 ### Sans Docker
 
 ```bash
@@ -70,6 +72,16 @@ Ces routes nécessitent une clé API valide.
 
 - `GET /api/v1/implants/`
 - `GET /api/v1/implants/{reference}`
+
+## Rôles des clés API
+
+Les clés API sont associées à un rôle défini dans `core/enums.py` :
+
+- `User` : accès standard aux ressources publiques et utilisateur
+- `Admin` : accès aux opérations de gestion, notamment la génération et révocation des clés
+- `SuperAdmin` : rôle le plus élevé, réservé aux opérations de supervision avancée
+
+La vérification du rôle est appliquée via les dépendances FastAPI dans `features/auth/dependencies.py`. Par exemple, `require_admin` interdit l'accès si la clé n'a pas le rôle `Admin`.
 
 ## Génération de la clé admin
 
