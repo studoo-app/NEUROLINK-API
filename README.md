@@ -31,9 +31,30 @@ API FastAPI pour la gestion d'implants NeuroLink et des clés d'authentification
 
 ### Avec Docker
 
+#### Utlisation du container en local
+
 ```bash
 docker compose up --build
 ```
+
+#### Utilisation de l'image publiée sur DockerHub
+
+Ajouter le service suivant dans votre `docker-compose.yml` :
+
+```yaml
+  api:
+    image: nours313/neurolink-api:latest
+    container_name: neurolink-api
+    ports:
+      - "8010:8000"
+    environment:
+      DATABASE_URL: sqlite:///./neurolink_db_docker
+    volumes:
+      - ./:/app
+    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+```
+
 
 L'API est exposée sur `http://localhost:8010`.
 
