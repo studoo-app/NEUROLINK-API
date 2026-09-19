@@ -37,3 +37,4 @@ async def get_implant(
             detail=f"Implant '{reference}' not found",
         )
     return serialize_implant(implant)
+
