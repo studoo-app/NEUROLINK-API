@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from core.database import get_db
 from features.auth.dependencies import get_current_api_key
+from features.implants import SideEffect
 from features.implants.models import ImplantModel
 from features.implants.schemas import Implant
 from features.implants.service import serialize_implant
@@ -37,3 +38,19 @@ async def get_implant(
             detail=f"Implant '{reference}' not found",
         )
     return serialize_implant(implant)
+
+@router.get("/{reference}/side-effects", response_model=list[SideEffect])
+async def get_implant(
+    reference: str,
+    db: Annotated[Session, Depends(get_db)],
+):
+    implant = db.scalar(
+        select(ImplantModel).where(ImplantModel.reference == reference)
+    )
+    if implant is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Implant '{reference}' not found",
+        )
+    return implant.side_effects
+

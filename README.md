@@ -44,7 +44,7 @@ La documentation Swagger est disponible sur `http://localhost:8010/docs`.
 Une clé administrateur doit être générée via le script suivant en se connectant sur le container de l'API :
 
 ```bash
-uv run python -m scripts.create_admin_keys.py
+uv run python -m scripts.create_admin_keys
 ```
 
 Le script crée une clé API avec le rôle `ADMIN`, affiche son `Key ID` et la valeur complète de la clé, puis recommande de la sauvegarder immédiatement.
