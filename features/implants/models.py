@@ -6,7 +6,7 @@ from sqlalchemy import JSON, Column, Enum, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.database import Base
-from core.enums import Category, Severity, Tier
+from core.enums import Category, Severity
 
 implant_incompatibilities = Table(
     "implant_incompatibilities",

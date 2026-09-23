@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field
 
-from core.enums import Category, Tier
+from core.enums import Category
 
 
 class Prerequisites(BaseModel):
