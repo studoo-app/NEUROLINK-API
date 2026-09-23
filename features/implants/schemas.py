@@ -29,7 +29,6 @@ class Implant(BaseModel):
     name: str
     description: str
     category: Category
-    tier: Tier
     prerequisites: Prerequisites | None = Prerequisites()
     sideseffects: list[SideEffect] = Field(default_factory=list)
 
