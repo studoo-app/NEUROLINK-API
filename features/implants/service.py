@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from random import randint, sample
+
 from core.database import SessionLocal
-from core.enums import Category, Severity, Tier
+from core.enums import Category, Severity
 from features.implants.models import ImplantModel, SideEffectModel
 from features.implants.schemas import Implant, Prerequisites
 
@@ -9,22 +11,148 @@ IMPLANT_COUNT = 50
 
 SIDE_EFFECT_TEMPLATES = (
     {
-        "reference": "SE-HEADACHE",
+        "reference": "SE-MILD-HEADACHE",
         "name": "Headache",
         "severity": Severity.MILD,
-        "description": "Transient discomfort during neural calibration.",
+        "description": "Light cranial pressure during initial calibration.",
     },
     {
-        "reference": "SE-NAUSEA",
+        "reference": "SE-MODERATE-HEADACHE",
+        "name": "Headache",
+        "severity": Severity.MODERATE,
+        "description": "Persistent pain after prolonged synchronization.",
+    },
+    {
+        "reference": "SE-SEVERE-HEADACHE",
+        "name": "Headache",
+        "severity": Severity.SEVERE,
+        "description": "Intense migraine triggered by neural overload.",
+    },
+    {
+        "reference": "SE-MILD-NAUSEA",
+        "name": "Nausea",
+        "severity": Severity.MILD,
+        "description": "Brief stomach discomfort after activation.",
+    },
+    {
+        "reference": "SE-MODERATE-NAUSEA",
         "name": "Nausea",
         "severity": Severity.MODERATE,
-        "description": "Vestibular disturbance after synchronization.",
+        "description": "Noticeable nausea during sensor alignment.",
     },
     {
-        "reference": "SE-INFLAMMATION",
+        "reference": "SE-SEVERE-NAUSEA",
+        "name": "Nausea",
+        "severity": Severity.SEVERE,
+        "description": "Severe vestibular disruption requiring rest.",
+    },
+    {
+        "reference": "SE-MILD-INFLAMMATION",
+        "name": "Inflammation",
+        "severity": Severity.MILD,
+        "description": "Localized tissue warmth around the implant site.",
+    },
+    {
+        "reference": "SE-MODERATE-INFLAMMATION",
+        "name": "Inflammation",
+        "severity": Severity.MODERATE,
+        "description": "Persistent swelling around the interface.",
+    },
+    {
+        "reference": "SE-SEVERE-INFLAMMATION",
         "name": "Inflammation",
         "severity": Severity.SEVERE,
-        "description": "Localized tissue reaction requiring follow-up.",
+        "description": "Acute inflammatory reaction requiring follow-up.",
+    },
+    {
+        "reference": "SE-MILD-FATIGUE",
+        "name": "Fatigue",
+        "severity": Severity.MILD,
+        "description": "Temporary drop in energy after implant activation.",
+    },
+    {
+        "reference": "SE-MODERATE-FATIGUE",
+        "name": "Fatigue",
+        "severity": Severity.MODERATE,
+        "description": "Persistent exhaustion after prolonged use.",
+    },
+    {
+        "reference": "SE-SEVERE-FATIGUE",
+        "name": "Fatigue",
+        "severity": Severity.SEVERE,
+        "description": "Severe depletion of energy requiring rest.",
+    },
+    {
+        "reference": "SE-MILD-DIZZINESS",
+        "name": "Dizziness",
+        "severity": Severity.MILD,
+        "description": "Brief disorientation during synchronization.",
+    },
+    {
+        "reference": "SE-MODERATE-DIZZINESS",
+        "name": "Dizziness",
+        "severity": Severity.MODERATE,
+        "description": "Short-lived balance disruption during synchronization.",
+    },
+    {
+        "reference": "SE-SEVERE-DIZZINESS",
+        "name": "Dizziness",
+        "severity": Severity.SEVERE,
+        "description": "Intense vertigo after calibration.",
+    },
+    {
+        "reference": "SE-MILD-TREMORS",
+        "name": "Tremors",
+        "severity": Severity.MILD,
+        "description": "Light involuntary movements after activation.",
+    },
+    {
+        "reference": "SE-MODERATE-TREMORS",
+        "name": "Tremors",
+        "severity": Severity.MODERATE,
+        "description": "Noticeable shaking during neural overload.",
+    },
+    {
+        "reference": "SE-SEVERE-TREMORS",
+        "name": "Tremors",
+        "severity": Severity.SEVERE,
+        "description": "Uncontrolled micro-movements following neural overload.",
+    },
+    {
+        "reference": "SE-MILD-IRRITATION",
+        "name": "Irritation",
+        "severity": Severity.MILD,
+        "description": "Localized discomfort around the implant interface.",
+    },
+    {
+        "reference": "SE-MODERATE-IRRITATION",
+        "name": "Irritation",
+        "severity": Severity.MODERATE,
+        "description": "Persistent irritation around the implant interface.",
+    },
+    {
+        "reference": "SE-SEVERE-IRRITATION",
+        "name": "Irritation",
+        "severity": Severity.SEVERE,
+        "description": "Intense local reaction requiring monitoring.",
+    },
+    {
+        "reference": "SE-MILD-CONFUSION",
+        "name": "Confusion",
+        "severity": Severity.MILD,
+        "description": "Temporary mental fog after recalibration.",
+    },
+    {
+        "reference": "SE-MODERATE-CONFUSION",
+        "name": "Confusion",
+        "severity": Severity.MODERATE,
+        "description": "Temporary cognitive fog during recalibration.",
+    },
+    {
+        "reference": "SE-SEVERE-CONFUSION",
+        "name": "Confusion",
+        "severity": Severity.SEVERE,
+        "description": "Severe disorientation requiring observation.",
     },
 )
 
@@ -153,6 +281,19 @@ def build_implant(index: int) -> ImplantModel:
         prerequisites=build_prerequisites(index),
     )
 
+    # implant.side_effects = [
+    #     SideEffectModel(
+    #         reference=f"{template['reference']}-{index + 1:03d}",
+    #         name=template["name"],
+    #         severity=template["severity"],
+    #         description=template["description"],
+    #     )
+    #     for template in SIDE_EFFECT_TEMPLATES[: 2 + (index % 2)]
+    # ]
+
+    side_effect_count = randint(0, 3)
+    selected_templates = sample(SIDE_EFFECT_TEMPLATES, k=side_effect_count)
+
     implant.side_effects = [
         SideEffectModel(
             reference=f"{template['reference']}-{index + 1:03d}",
@@ -160,7 +301,7 @@ def build_implant(index: int) -> ImplantModel:
             severity=template["severity"],
             description=template["description"],
         )
-        for template in SIDE_EFFECT_TEMPLATES[: 2 + (index % 2)]
+        for template in selected_templates
     ]
 
     return implant
