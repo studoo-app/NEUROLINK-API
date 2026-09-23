@@ -150,7 +150,6 @@ def build_implant(index: int) -> ImplantModel:
         name=name,
         description=build_description(category, tier, name),
         category=category,
-        tier=tier,
         prerequisites=build_prerequisites(index),
     )
 
@@ -178,7 +177,6 @@ def serialize_implant(implant: ImplantModel) -> Implant:
         name=implant.name,
         description=implant.description,
         category=implant.category,
-        tier=implant.tier,
         prerequisites=Prerequisites(**prerequisites_data),
         sideseffects=[
             {
@@ -192,31 +190,37 @@ def serialize_implant(implant: ImplantModel) -> Implant:
     )
 
 
+def assign_incompatibilities(implants: list[ImplantModel]) -> None:
+    seen_pairs: set[tuple[str, str]] = set()
+
+    for implant in implants:
+        implant.incompatible_implants = []
+
+    for index, implant in enumerate(implants):
+        for offset in (1, 7, 13, 19, 25):
+            candidate = implants[(index + offset) % len(implants)]
+            if candidate.reference == implant.reference:
+                continue
+
+            pair = tuple(sorted((implant.reference, candidate.reference)))
+            if pair in seen_pairs:
+                continue
+
+            seen_pairs.add(pair)
+            implant.incompatible_implants.append(candidate)
+            candidate.incompatible_implants.append(implant)
+
+            if len(implant.incompatible_implants) >= 2:
+                break
+
 def seed_implants() -> None:
     with SessionLocal() as db:
-        if db.query(ImplantModel).count() >= IMPLANT_COUNT:
-            return
+        with SessionLocal() as db:
+            if db.query(ImplantModel).count() >= IMPLANT_COUNT:
+                return
 
-        implants = [build_implant(index) for index in range(IMPLANT_COUNT)]
-        implants_by_reference = {implant.reference: implant for implant in implants}
-        seen_pairs: set[tuple[str, str]] = set()
+            implants = [build_implant(index) for index in range(IMPLANT_COUNT)]
+            assign_incompatibilities(implants)
 
-        for index, implant in enumerate(implants):
-            candidates: list[ImplantModel] = []
-            for offset in (1, 7, 13, 19, 25):
-                candidate_index = (index + offset) % IMPLANT_COUNT
-                candidate_ref = f"REF{candidate_index + 1:03d}"
-                if candidate_ref == implant.reference:
-                    continue
-                pair = (implant.reference, candidate_ref)
-                reverse = (candidate_ref, implant.reference)
-                if pair in seen_pairs or reverse in seen_pairs:
-                    continue
-                seen_pairs.add(pair)
-                candidates.append(implants_by_reference[candidate_ref])
-                if len(candidates) >= 2:
-                    break
-            implant.incompatible_implants = candidates
-
-        db.add_all(implants)
-        db.commit()
+            db.add_all(implants)
+            db.commit()

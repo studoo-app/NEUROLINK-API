@@ -27,7 +27,6 @@ class ImplantModel(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(String(1000), nullable=False, default="")
     category: Mapped[Category] = mapped_column(Enum(Category), nullable=False)
-    tier: Mapped[Tier] = mapped_column(Enum(Tier), nullable=False)
     prerequisites: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
 
     side_effects: Mapped[list[SideEffectModel]] = relationship(
