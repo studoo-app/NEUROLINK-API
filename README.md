@@ -24,8 +24,6 @@ Ajouter le service suivant dans votre `docker-compose.yml` :
       - "8010:8000"
     environment:
       DATABASE_URL: sqlite:///./neurolink_db_docker
-    volumes:
-      - ./:/app
     command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 ```
